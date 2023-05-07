@@ -8,6 +8,8 @@
  * Boyer-Moore algorithm.
  */
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,19 +24,85 @@ public class StringMatchingExperiment {
     static int sizeOfBadSymbol = 0;
     static int badSymbol[][];
     static int goodSuffix[];
+    static long numberOfComparisons = 0;
 
 
 
     public static void main(String args[]) throws IOException {
 
-        Path textPath = Path.of("1MBsample2.html");
-        String text = Files.readString(textPath); //The file fetched to memory
+        long beginMain = System.currentTimeMillis(); //This is for running time
+
+        //Fetching the file into memory
+        Path textPath = Path.of("sample1.html");
+        ArrayList<String> text = new ArrayList<>(); //Since we do not know the number of lines in the file, we use ArrayList
+
+        BufferedReader reader;
+
+        try {
+            reader = new BufferedReader(new FileReader(textPath.toFile()));
+            String line = reader.readLine();
+            text.add(line);
+
+            while (line != null) {
+                line = reader.readLine();
+                text.add(line);
+            }
+
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         pattern = "AT_THAT";
 
+        ArrayList<Integer[]> indices; //The indices of all matches
 
 
 
+        //BRUTE FORCE
+        long beginBruteForce = System.currentTimeMillis();
+
+        indices = bruteForceStringMathcing(text, pattern);
+        printOutput(text, indices);
+
+        long endBruteForce = System.currentTimeMillis();
+        System.out.printf("Time elapsed for Brute Froce: %d ms\n", endBruteForce-beginBruteForce);
+
+
+
+
+
+
+        //HORSPOOL'S ALGORITHM
+        long beginHorspool = System.currentTimeMillis();
+
+        indices = horspoolsAlgorithm(text, pattern);
+        printOutput(text, indices);
+
+        long endHorspool = System.currentTimeMillis();
+        System.out.printf("Time elapsed for Horspool's Algorithm: %d ms\n", endHorspool-beginHorspool);
+
+
+
+
+
+        //BOYER-MOORE ALGORITHM
+        long beginBoyer = System.currentTimeMillis();
+
+        indices = boyerMooreAlgorithm(text, pattern);
+        printOutput(text, indices);
+
+        long endBoyer = System.currentTimeMillis();
+        System.out.printf("Time elapsed for Boyer-Moore Algorithm: %d ms\n", endBoyer-beginBoyer);
+
+
+
+
+
+
+        long endMain = System.currentTimeMillis();
+        System.out.printf("Time elapsed in total: %d ms\n", endMain-beginMain);
 
     }
 
@@ -42,9 +110,9 @@ public class StringMatchingExperiment {
 
 
 
-    public static ArrayList<Integer> bruteForceStringMathcing(String text, String pattern){
+    public static ArrayList<Integer[]> bruteForceStringMathcing(ArrayList<String> text, String pattern){
 
-        ArrayList<Integer> indices = new ArrayList<>();
+        ArrayList<Integer[]> indices = new ArrayList<>();
 
 
 
@@ -63,9 +131,9 @@ public class StringMatchingExperiment {
 
 
 
-    public static ArrayList<Integer> horspoolsAlgorithm(String text, String pattern){
+    public static ArrayList<Integer[]> horspoolsAlgorithm(ArrayList<String> text, String pattern){
 
-        ArrayList<Integer> indices = new ArrayList<>();
+        ArrayList<Integer[]> indices = new ArrayList<>();
 
 
 
@@ -88,13 +156,27 @@ public class StringMatchingExperiment {
 
 
 
-    public static ArrayList<Integer> boyerMooreAlgorithm(String text, String pattern){
+    public static ArrayList<Integer[]> boyerMooreAlgorithm(ArrayList<String> text, String pattern){
 
-        ArrayList<Integer> indices = new ArrayList<>();
+        ArrayList<Integer[]> indices = new ArrayList<>();
 
 
 
         return indices;
+    }
+
+
+    public static void printOutput(ArrayList<String> text, ArrayList<Integer[]> indices) throws IOException {
+
+        FileWriter writer = new FileWriter("output.html");
+
+
+
+
+
+
+        writer.close();
+
     }
 
 
