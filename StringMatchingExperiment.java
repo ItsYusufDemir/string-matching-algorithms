@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 
 
+
 public class StringMatchingExperiment {
 
     //GLOBAL VARIABLES
@@ -104,6 +105,14 @@ public class StringMatchingExperiment {
         long endMain = System.currentTimeMillis();
         System.out.printf("Time elapsed in total: %d ms\n", endMain-beginMain);
 
+
+        //TEST FOR GOOD SUFFİX
+       /* createGoodSuffixTable("GCAGAGAG");
+        for(int i = 0; i < goodSuffix.length; i++) {
+            System.out.println("goodSuffix[" + i + "] = " + goodSuffix[i]);
+        }*/
+
+
     }
 
 
@@ -146,7 +155,24 @@ public class StringMatchingExperiment {
 
 
     public static void createGoodSuffixTable(String pattern){
+        goodSuffix = new int[pattern.length()];
+        String temp = "";
+        String reversedPattern = "";
 
+        for (int i = pattern.length() - 1; i >= 0; i--) {
+            reversedPattern += pattern.charAt(i);
+        }
+
+        for(int i = 0; i < pattern.length(); i++) {
+            temp = pattern.charAt(i) + temp;
+            for(int j = 0; j < temp.length(); j++) {
+                if(reversedPattern.charAt(j) == temp.charAt(j)) {
+                    goodSuffix[i] += 1;
+                } else {
+                    break;
+                }
+            }
+        }
 
     }
 
