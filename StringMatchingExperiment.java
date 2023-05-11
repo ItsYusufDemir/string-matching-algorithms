@@ -69,7 +69,7 @@ public class StringMatchingExperiment {
 
         long endBruteForce = System.currentTimeMillis();
         System.out.printf("\nTime elapsed for Brute Force: %d ms\n", endBruteForce-beginBruteForce);
-        System.out.printf("\nNumber of comparison for Brute Force: %d", numberOfComparisons);
+        System.out.printf("Number of comparison for Brute Force: %d\n\n", numberOfComparisons);
         numberOfComparisons = 0;
 
 
@@ -85,7 +85,7 @@ public class StringMatchingExperiment {
 
         long endHorspool = System.currentTimeMillis();
         System.out.printf("Time elapsed for Horspool's Algorithm: %d ms\n", endHorspool-beginHorspool);
-        System.out.printf("\nNumber of comparison for Horspool's Algorithm: %d", numberOfComparisons);
+        System.out.printf("Number of comparison for Horspool's Algorithm: %d\n\n", numberOfComparisons);
         numberOfComparisons = 0;
 
 
@@ -100,7 +100,7 @@ public class StringMatchingExperiment {
 
         long endBoyer = System.currentTimeMillis();
         System.out.printf("Time elapsed for Boyer-Moore Algorithm: %d ms\n", endBoyer-beginBoyer);
-        System.out.printf("\nNumber of comparison for Boyer-Moore Algorithm: %d", numberOfComparisons);
+        System.out.printf("Number of comparison for Boyer-Moore Algorithm: %d\n\n", numberOfComparisons);
         numberOfComparisons = 0;
 
 
