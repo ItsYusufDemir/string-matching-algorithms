@@ -137,18 +137,18 @@ public class StringMatchingExperiment {
             str = text.get(i); // str is equal to current line of the text
             char token[] = str.toCharArray(); //converting current line to char array
 
-            for (int j = length - 1; j < token.length; j++) {
-                int a = 0;
+            for (int j = 0; j < token.length-length; j++) {
+                int a = length-1; //initializing "a"
 
-                while ((a < length) && (p[length - 1 - a] == token[j - a]) && (numberOfComparisons++ >= 0)) { //in each match, we increase the variable "a" to obtain whether we have complete match or not
-                       a++;
+                while ((a >= 0) && (p[length - 1 - a] == token[j + length -1 - a]) && (numberOfComparisons++ >= 0)) { //in each match, we decrease the variable "a" to obtain whether we have complete match or not
+                       a--;
                    }
 
 
-                if (a == length) {  //if pattern matches completely
+                if (a == -1) {  //if pattern matches completely
                     lineAndColumn = new Integer[2]; //creating new array which holds line and column number of match
                     lineAndColumn[0] = i + 1; //line number
-                    lineAndColumn[1] = j - length + 2; //column number
+                    lineAndColumn[1] = j + 1 ; //column number
                     indices.add(lineAndColumn); //add array to arraylist
                 }
             }
