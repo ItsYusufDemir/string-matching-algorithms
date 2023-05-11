@@ -134,9 +134,12 @@ public class StringMatchingExperiment {
 
             for (int j = length - 1; j < token.length; j++) {
                 int a = 0;
-                while ((a < length) && (p[length - 1 - a] == token[j - a])) { //in each match, we increase the variable "a" to obtain whether we have complete match or not
-                    a++;
-                }
+
+                while ((a < length) && (p[length - 1 - a] == token[j - a]) && (numberOfComparisons++ >= 0)) { //in each match, we increase the variable "a" to obtain whether we have complete match or not
+                       a++;
+                   }
+
+
                 if (a == length) {  //if pattern matches completely
                     lineAndColumn = new Integer[2]; //creating new array which holds line and column number of match
                     lineAndColumn[0] = i + 1; //line number
@@ -206,7 +209,7 @@ public class StringMatchingExperiment {
 
             for (int j = length - 1; j < token.length;j++ ) {
                 int a = 0;
-                while ((a < length) && (p[length - 1 - a] == token[j - a])) { //in each match, we increase the variable "a" to obtain whether we have complete match or not
+                while ((a < length) && (p[length - 1 - a] == token[j - a]) && numberOfComparisons++ >= 0) { //in each match, we increase the variable "a" to obtain whether we have complete match or not
                     a++;
                 }
                 if (a == length) { //if pattern matches completely
