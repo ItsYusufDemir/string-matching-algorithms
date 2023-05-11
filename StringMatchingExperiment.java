@@ -68,7 +68,9 @@ public class StringMatchingExperiment {
         printOutput(text, indices);
 
         long endBruteForce = System.currentTimeMillis();
-        System.out.printf("Time elapsed for Brute Froce: %d ms\n", endBruteForce-beginBruteForce);
+        System.out.printf("\nTime elapsed for Brute Force: %d ms\n", endBruteForce-beginBruteForce);
+        System.out.printf("\nNumber of comparison for Brute Force: %d", numberOfComparisons);
+        numberOfComparisons = 0;
 
 
 
@@ -83,6 +85,8 @@ public class StringMatchingExperiment {
 
         long endHorspool = System.currentTimeMillis();
         System.out.printf("Time elapsed for Horspool's Algorithm: %d ms\n", endHorspool-beginHorspool);
+        System.out.printf("\nNumber of comparison for Horspool's Algorithm: %d", numberOfComparisons);
+        numberOfComparisons = 0;
 
 
 
@@ -96,14 +100,15 @@ public class StringMatchingExperiment {
 
         long endBoyer = System.currentTimeMillis();
         System.out.printf("Time elapsed for Boyer-Moore Algorithm: %d ms\n", endBoyer-beginBoyer);
-
+        System.out.printf("\nNumber of comparison for Boyer-Moore Algorithm: %d", numberOfComparisons);
+        numberOfComparisons = 0;
 
 
 
 
 
         long endMain = System.currentTimeMillis();
-        System.out.printf("Time elapsed in total: %d ms\n", endMain-beginMain);
+        System.out.printf("\nTime elapsed in total: %d ms\n", endMain-beginMain);
 
 
         //TEST FOR GOOD SUFFİX
@@ -234,6 +239,9 @@ public class StringMatchingExperiment {
         }
         return indices; //return arraylist indices
     }
+
+
+
 
     //this method is for founding the exact elements that the pattern has. We can think it as set data type's function
     public static String uniqueElements(String pattern) {
