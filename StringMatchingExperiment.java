@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.*;
 
 
 
@@ -55,7 +56,7 @@ public class StringMatchingExperiment {
         }
 
 
-        pattern = "AT_THAT";
+        pattern = "10000";
 
         ArrayList<Integer[]> indices; //The indices of all matches
 
@@ -106,11 +107,6 @@ public class StringMatchingExperiment {
         System.out.printf("Time elapsed in total: %d ms\n", endMain-beginMain);
 
 
-        //TEST FOR GOOD SUFFİX
-       /* createGoodSuffixTable("GCAGAGAG");
-        for(int i = 0; i < goodSuffix.length; i++) {
-            System.out.println("goodSuffix[" + i + "] = " + goodSuffix[i]);
-        }*/
 
 
     }
@@ -155,25 +151,43 @@ public class StringMatchingExperiment {
 
 
     public static void createGoodSuffixTable(String pattern){
-        goodSuffix = new int[pattern.length()];
-        String temp = "";
+        goodSuffix = new int[pattern.length() - 1];
+        String searchPattern = "";
         String reversedPattern = "";
+        String temp = "";
 
         for (int i = pattern.length() - 1; i >= 0; i--) {
             reversedPattern += pattern.charAt(i);
         }
 
-        for(int i = 0; i < pattern.length(); i++) {
-            temp = pattern.charAt(i) + temp;
-            for(int j = 0; j < temp.length(); j++) {
-                if(reversedPattern.charAt(j) == temp.charAt(j)) {
-                    goodSuffix[i] += 1;
-                } else {
+        for(int i = 0; i < pattern.length() - 1; i++) {
+            searchPattern = reversedPattern.substring(0, i+2);
+            boolean check = false;
+            for(int j = 1; j < reversedPattern.length(); j++) {
+                if(goodSuffix[i] != 0 && goodSuffix[i] != pattern.length()) {
                     break;
+                }
+                if(reversedPattern.charAt(j) == searchPattern.charAt(0)) {
+                    if(j+searchPattern.length() - 1 > reversedPattern.length() - 1) {
+                        temp = reversedPattern.substring(j);
+                        for(int m = 0; m < temp.length(); m++) {
+                            if(temp.charAt(m) != searchPattern.charAt(m)) {
+                                goodSuffix[i] = pattern.length();
+                                break;
+                            } else {
+                                goodSuffix[i] = j;
+                            }
+                        }
+                    } else {
+                        temp = reversedPattern.substring(j, j + searchPattern.length());
+                        if(temp.substring(0, temp.length() - 1).equals(searchPattern.substring(0, searchPattern.length() - 1)) && searchPattern.charAt(searchPattern.length() - 1) != temp.charAt(temp.length() - 1)) {
+                            goodSuffix[i] = j;
+                            break;
+                        }
+                    }
                 }
             }
         }
-
     }
 
 
@@ -183,7 +197,8 @@ public class StringMatchingExperiment {
 
 
     public static ArrayList<Integer[]> boyerMooreAlgorithm(ArrayList<String> text, String pattern){
-
+        createBadSymbolTable(pattern);
+        createGoodSuffixTable(pattern);
         ArrayList<Integer[]> indices = new ArrayList<>();
 
 
@@ -204,8 +219,6 @@ public class StringMatchingExperiment {
         writer.close();
 
     }
-
-
 
 
 
