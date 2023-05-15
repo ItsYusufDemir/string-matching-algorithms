@@ -34,7 +34,7 @@ public class StringMatchingExperiment {
         long beginMain = System.currentTimeMillis(); //This is for running time
 
         //Fetching the file into memory
-        Path textPath = Path.of("sample1.html");
+        Path textPath = Path.of("1MBEnglish.html");
         ArrayList<String> text = new ArrayList<>(); //Since we do not know the number of lines in the file, we use ArrayList
 
         BufferedReader reader;
@@ -55,7 +55,7 @@ public class StringMatchingExperiment {
         }
 
 
-        pattern = "BAOBAB";
+        pattern = "Insurance";
 
         ArrayList<Integer[]> indices; //The indices of all matches
 
@@ -282,6 +282,10 @@ public class StringMatchingExperiment {
             reversedPattern += pattern.charAt(i);
         }
 
+        for(int i = 0; i < goodSuffix.length; i++) {
+            goodSuffix[i] = pattern.length();
+        }
+
         for(int i = 0; i < pattern.length() - 1; i++) {
             searchPattern = reversedPattern.substring(0, i+2);
             boolean check = false;
@@ -335,7 +339,7 @@ public class StringMatchingExperiment {
 
             int shiftCount = pattern.length();
 
-            for(int j = 0; j < text.get(i).length(); j++) { //Checks if a search pattern exists
+            for(int j = 0; j < text.get(i).length(); j++) {//Checks if a search pattern exists
                 if(pattern.length() - (text.get(i).length() - j) >= 1) {
                     break;
                 }
@@ -405,7 +409,6 @@ public class StringMatchingExperiment {
     public static void printOutput(ArrayList<String> text, ArrayList<Integer[]> indices) throws IOException {
 
         FileWriter writer = new FileWriter("output.html");
-
 
 
 
