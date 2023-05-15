@@ -55,7 +55,11 @@ public class StringMatchingExperiment {
         }
 
 
+
+        
+
         pattern = "Together";
+
 
         ArrayList<Integer[]> indices; //The indices of all matches
 
@@ -285,6 +289,14 @@ public class StringMatchingExperiment {
         for (int i = pattern.length() - 1; i >= 0; i--) {
             reversedPattern += pattern.charAt(i);
         }
+
+
+        
+
+        for(int i = 0; i < goodSuffix.length; i++) {
+            goodSuffix[i] = pattern.length();
+        }
+
 
         for(int i = 0; i < pattern.length() - 1; i++) {
             searchPattern = reversedPattern.substring(0, i+2);
