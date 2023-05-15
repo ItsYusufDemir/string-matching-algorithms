@@ -26,6 +26,7 @@ public class StringMatchingExperiment {
     static int badSymbol[][];
     static int goodSuffix[];
     static long numberOfComparisons = 0;
+    static  String textName;
 
 
 
@@ -34,7 +35,8 @@ public class StringMatchingExperiment {
         long beginMain = System.currentTimeMillis(); //This is for running time
 
         //Fetching the file into memory
-        Path textPath = Path.of("1MBEnglish.html");
+        textName = "1MBEnglish";
+        Path textPath = Path.of(textName + ".html");
         ArrayList<String> text = new ArrayList<>(); //Since we do not know the number of lines in the file, we use ArrayList
 
         BufferedReader reader;
@@ -58,7 +60,7 @@ public class StringMatchingExperiment {
 
         
 
-        pattern = "Together";
+        pattern = "Iron";
 
 
         ArrayList<Integer[]> indices; //The indices of all matches
@@ -420,11 +422,27 @@ public class StringMatchingExperiment {
 
     public static void printOutput(ArrayList<String> text, ArrayList<Integer[]> indices) throws IOException {
 
-        FileWriter writer = new FileWriter("output.html");
+        String fileName = textName + "_output";
+        FileWriter writer = new FileWriter(fileName + ".html");
+        Integer[] lineAndColumn = new Integer[2];
+        String patterWithMark = "<mark>" + pattern + "</mark>";
+        String newLine = "";
+        String oldLine = "";
 
+        for(int i = 0; i < text.size() - 1; ++i) {
+            oldLine = (String)text.get(i);
+            int count = 0;
 
-
-
+            for(int j = 0; j < indices.size() - 1; ++j) {
+                lineAndColumn = (Integer[])indices.get(j);
+                if (lineAndColumn[0] - 1 == i) {
+                    newLine = oldLine.substring(0, lineAndColumn[1] - 1 + count * (patterWithMark.length() - pattern.length())) + patterWithMark + oldLine.substring(lineAndColumn[1] - 1 + pattern.length() + count * (patterWithMark.length() - pattern.length()));
+                    oldLine = newLine;
+                    ++count;
+                }
+            }
+            writer.write(newLine + "\n");
+        }
 
 
         writer.close();
