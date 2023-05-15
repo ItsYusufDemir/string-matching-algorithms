@@ -55,7 +55,7 @@ public class StringMatchingExperiment {
         }
 
 
-        pattern = "Insurance";
+        pattern = "together";
 
         ArrayList<Integer[]> indices; //The indices of all matches
 
