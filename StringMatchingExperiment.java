@@ -286,6 +286,10 @@ public class StringMatchingExperiment {
             goodSuffix[i] = pattern.length();
         }
 
+        for(int i = 0; i < goodSuffix.length; i++) {
+            goodSuffix[i] = pattern.length();
+        }
+
         for(int i = 0; i < pattern.length() - 1; i++) {
             searchPattern = reversedPattern.substring(0, i+2);
             boolean check = false;
