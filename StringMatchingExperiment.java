@@ -34,7 +34,7 @@ public class StringMatchingExperiment {
         long beginMain = System.currentTimeMillis(); //This is for running time
 
         //Fetching the file into memory
-        Path textPath = Path.of("2MBEnglish.html");
+        Path textPath = Path.of("sample1.html");
         ArrayList<String> text = new ArrayList<>(); //Since we do not know the number of lines in the file, we use ArrayList
 
         BufferedReader reader;
@@ -55,7 +55,7 @@ public class StringMatchingExperiment {
         }
 
 
-        pattern = "together";
+        pattern = "BAOBAB";
 
         ArrayList<Integer[]> indices; //The indices of all matches
 
@@ -111,11 +111,8 @@ public class StringMatchingExperiment {
         System.out.printf("\nTime elapsed in total: %d ms\n", endMain-beginMain);
 
 
-        //TEST FOR GOOD SUFFİX
-       /* createGoodSuffixTable("GCAGAGAG");
-        for(int i = 0; i < goodSuffix.length; i++) {
-            System.out.println("goodSuffix[" + i + "] = " + goodSuffix[i]);
-        }*/
+
+
 
 
     }
@@ -313,7 +310,11 @@ public class StringMatchingExperiment {
                 }
             }
         }
-
+        System.out.println("GoodSuffix Table");
+        for(int i = 0; i < goodSuffix.length; i++) {
+            System.out.println("goodSuffix[" + (i+1) + "] = " + goodSuffix[i]);
+        }
+        System.out.println("--------------------------------------");
     }
 
 
@@ -323,10 +324,79 @@ public class StringMatchingExperiment {
 
 
     public static ArrayList<Integer[]> boyerMooreAlgorithm(ArrayList<String> text, String pattern){
-
+        createBadSymbolTable(pattern);
+        createGoodSuffixTable(pattern);
         ArrayList<Integer[]> indices = new ArrayList<>();
+        Integer[] lineAndColumn ;
 
+        for(int i = 0; i < text.size() - 1; i++) { //loop for access every line in text
+            int size = text.size();
+            String searchPattern = "";
 
+            int shiftCount = pattern.length();
+
+            for(int j = 0; j < text.get(i).length(); j++) { //Checks if a search pattern exists
+                if(pattern.length() - (text.get(i).length() - j) >= 1) {
+                    break;
+                }
+                searchPattern = text.get(i).substring(j, j + pattern.length());
+                int count = 0;
+                if(searchPattern.contains("<")) { //checks for jumps
+                    if(searchPattern.contains(">")) {
+                        shiftCount = searchPattern.indexOf(">") + 1;
+                    } else {
+                        while(text.get(i).charAt(j) != '>') {
+                            j++;
+                        }
+                        j++;
+                    }
+                } else {
+                    int d1 = 0;
+                    int d2 = 0;
+                    int index = searchPattern.length();
+                    for(int m = searchPattern.length() - 1; m >= 0; m--) {
+                        if(searchPattern.charAt(m) == pattern.charAt(m)) {
+                            count++;
+                        } else {
+                            numberOfComparisons++;
+                            for(int n = 0; n < badSymbol.length; n++) {
+                                char tes = (char)badSymbol[n][0];
+                                char a = searchPattern.charAt(m);
+                                if(searchPattern.charAt(m) == tes) {
+                                    d1 = badSymbol[n][1];
+                                    break;
+                                } else {
+                                    d1 = pattern.length();
+                                }
+                            }
+                            if(count != 0) {
+                                d2 = goodSuffix[count - 1];
+                            }
+
+                             if(d1 - count > d2) {
+                                shiftCount = d1 - count;
+                                break;
+                            } else {
+                                shiftCount = d2;
+                                break;
+                            }
+
+                        }
+                    }
+
+                }
+                if(count == pattern.length()) {
+                    numberOfComparisons++;
+                    lineAndColumn = new Integer[2]; //creating new array which holds line and column number of match
+                    lineAndColumn[0] = i + 1; //line number
+                    lineAndColumn[1] = j + 1 ; //column number
+                    indices.add(lineAndColumn);
+                    shiftCount = pattern.length();
+                }
+                j += shiftCount - 1;
+            }
+
+        }
 
         return indices;
     }
