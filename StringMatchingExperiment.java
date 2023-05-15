@@ -55,7 +55,11 @@ public class StringMatchingExperiment {
         }
 
 
-        pattern = "together";
+
+        
+
+        pattern = "Together";
+
 
         ArrayList<Integer[]> indices; //The indices of all matches
 
@@ -137,8 +141,10 @@ public class StringMatchingExperiment {
             for (int j = 0; j < token.length-length; j++) {
                 int a = length-1; //initializing "a"
 
-                while ((a >= 0) && (p[length - 1 - a] == token[j + length -1 - a]) && (numberOfComparisons++ >= 0)) { //in each match, we decrease the variable "a" to obtain whether we have complete match or not
+                numberOfComparisons++;
+                while ((a >= 0) && (p[length - 1 - a] == token[j + length -1 - a])) { //in each match, we decrease the variable "a" to obtain whether we have complete match or not
                        a--;
+                       numberOfComparisons++;
                    }
 
 
@@ -211,8 +217,10 @@ public class StringMatchingExperiment {
 
             for (int j = length - 1; j < token.length;j++ ) {
                 int a = 0;
-                while ((a < length) && (p[length - 1 - a] == token[j - a]) && numberOfComparisons++ >= 0) { //in each match, we increase the variable "a" to obtain whether we have complete match or not
+                numberOfComparisons++;
+                while ((a < length) && (p[length - 1 - a] == token[j - a])) { //in each match, we increase the variable "a" to obtain whether we have complete match or not
                     a++;
+                    numberOfComparisons++;
                 }
                 if (a == length) { //if pattern matches completely
                     lineAndColumn = new Integer[2]; //creating new array which holds line and column number of match
@@ -282,13 +290,13 @@ public class StringMatchingExperiment {
             reversedPattern += pattern.charAt(i);
         }
 
-        for(int i = 0; i < goodSuffix.length; i++) {
-            goodSuffix[i] = pattern.length();
-        }
+
+        
 
         for(int i = 0; i < goodSuffix.length; i++) {
             goodSuffix[i] = pattern.length();
         }
+
 
         for(int i = 0; i < pattern.length() - 1; i++) {
             searchPattern = reversedPattern.substring(0, i+2);
@@ -343,7 +351,7 @@ public class StringMatchingExperiment {
 
             int shiftCount = pattern.length();
 
-            for(int j = 0; j < text.get(i).length(); j++) {//Checks if a search pattern exists
+            for(int j = 0; j < text.get(i).length(); j++) { //Checks if a search pattern exists
                 if(pattern.length() - (text.get(i).length() - j) >= 1) {
                     break;
                 }
@@ -413,6 +421,7 @@ public class StringMatchingExperiment {
     public static void printOutput(ArrayList<String> text, ArrayList<Integer[]> indices) throws IOException {
 
         FileWriter writer = new FileWriter("output.html");
+
 
 
 
