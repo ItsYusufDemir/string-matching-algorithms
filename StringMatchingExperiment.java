@@ -34,7 +34,7 @@ public class StringMatchingExperiment {
         long beginMain = System.currentTimeMillis(); //This is for running time
 
         //Fetching the file into memory
-        Path textPath = Path.of("sample1.html");
+        Path textPath = Path.of("1MBEnglish.html");
         ArrayList<String> text = new ArrayList<>(); //Since we do not know the number of lines in the file, we use ArrayList
 
         BufferedReader reader;
@@ -55,7 +55,7 @@ public class StringMatchingExperiment {
         }
 
 
-        pattern = "BAOBAB";
+        pattern = "Together";
 
         ArrayList<Integer[]> indices; //The indices of all matches
 
@@ -137,8 +137,10 @@ public class StringMatchingExperiment {
             for (int j = 0; j < token.length-length; j++) {
                 int a = length-1; //initializing "a"
 
-                while ((a >= 0) && (p[length - 1 - a] == token[j + length -1 - a]) && (numberOfComparisons++ >= 0)) { //in each match, we decrease the variable "a" to obtain whether we have complete match or not
+                numberOfComparisons++;
+                while ((a >= 0) && (p[length - 1 - a] == token[j + length -1 - a])) { //in each match, we decrease the variable "a" to obtain whether we have complete match or not
                        a--;
+                       numberOfComparisons++;
                    }
 
 
@@ -211,8 +213,10 @@ public class StringMatchingExperiment {
 
             for (int j = length - 1; j < token.length;j++ ) {
                 int a = 0;
-                while ((a < length) && (p[length - 1 - a] == token[j - a]) && numberOfComparisons++ >= 0) { //in each match, we increase the variable "a" to obtain whether we have complete match or not
+                numberOfComparisons++;
+                while ((a < length) && (p[length - 1 - a] == token[j - a])) { //in each match, we increase the variable "a" to obtain whether we have complete match or not
                     a++;
+                    numberOfComparisons++;
                 }
                 if (a == length) { //if pattern matches completely
                     lineAndColumn = new Integer[2]; //creating new array which holds line and column number of match
