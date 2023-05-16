@@ -281,14 +281,14 @@ public class StringMatchingExperiment {
 
 
 
-
+    //This method create goodSuffix table of pattern for boyermoore algorithm
     public static void createGoodSuffixTable(String pattern){
         goodSuffix = new int[pattern.length() - 1];
-        String searchPattern = "";
-        String reversedPattern = "";
+        String searchPattern = "";//string to be compared with pattern
+        String reversedPattern = "";//reversal of the pattern
         String temp = "";
 
-        for (int i = pattern.length() - 1; i >= 0; i--) {
+        for (int i = pattern.length() - 1; i >= 0; i--) {//reverses the pattern to make it easier
             reversedPattern += pattern.charAt(i);
         }
 
@@ -300,17 +300,17 @@ public class StringMatchingExperiment {
         }
 
 
-        for(int i = 0; i < pattern.length() - 1; i++) {
-            searchPattern = reversedPattern.substring(0, i+2);
-            boolean check = false;
-            for(int j = 1; j < reversedPattern.length(); j++) {
+        for(int i = 0; i < pattern.length() - 1; i++) {//Cycles through all the characters in the pattern
+            searchPattern = reversedPattern.substring(0, i+2);//set searchPattern
+            for(int j = 1; j < reversedPattern.length(); j++) {//goodsuffix stops if found
                 if(goodSuffix[i] != 0 && goodSuffix[i] != pattern.length()) {
                     break;
                 }
-                if(reversedPattern.charAt(j) == searchPattern.charAt(0)) {
+                if(reversedPattern.charAt(j) == searchPattern.charAt(0)) {//Checks whether there is a match between the search pattern and the reversed pattern.
+                    //length control of strings
                     if(j+searchPattern.length() - 1 > reversedPattern.length() - 1) {
                         temp = reversedPattern.substring(j);
-                        for(int m = 0; m < temp.length(); m++) {
+                        for(int m = 0; m < temp.length(); m++) {//calculate how many characters match
                             if(temp.charAt(m) != searchPattern.charAt(m)) {
                                 goodSuffix[i] = pattern.length();
                                 break;
@@ -320,6 +320,7 @@ public class StringMatchingExperiment {
                         }
                     } else {
                         temp = reversedPattern.substring(j, j + searchPattern.length());
+                        //If the search pattern and reversed pattern match some of them, it looks at the next characters of both, and if different, goodSuffix is found.
                         if(temp.substring(0, temp.length() - 1).equals(searchPattern.substring(0, searchPattern.length() - 1)) && searchPattern.charAt(searchPattern.length() - 1) != temp.charAt(temp.length() - 1)) {
                             goodSuffix[i] = j;
                             break;
@@ -329,7 +330,7 @@ public class StringMatchingExperiment {
             }
         }
         System.out.println("GoodSuffix Table");
-        for(int i = 0; i < goodSuffix.length; i++) {
+        for(int i = 0; i < goodSuffix.length; i++) {//print the goodSuffix table
             System.out.println("goodSuffix[" + (i+1) + "] = " + goodSuffix[i]);
         }
         System.out.println("--------------------------------------");
@@ -339,8 +340,7 @@ public class StringMatchingExperiment {
 
 
 
-
-
+    //this method does string matching using boyermoore algorithm
     public static ArrayList<Integer[]> boyerMooreAlgorithm(ArrayList<String> text, String pattern){
         createBadSymbolTable(pattern);
         createGoodSuffixTable(pattern);
@@ -372,12 +372,12 @@ public class StringMatchingExperiment {
                     int d1 = 0;
                     int d2 = 0;
                     int index = searchPattern.length();
-                    for(int m = searchPattern.length() - 1; m >= 0; m--) {
+                    for(int m = searchPattern.length() - 1; m >= 0; m--) {//Count how many characters the pattern matches
                         if(searchPattern.charAt(m) == pattern.charAt(m)) {
                             count++;
                         } else {
                             numberOfComparisons++;
-                            for(int n = 0; n < badSymbol.length; n++) {
+                            for(int n = 0; n < badSymbol.length; n++) {//d1 is found by looking at badSymbol table
                                 char tes = (char)badSymbol[n][0];
                                 char a = searchPattern.charAt(m);
                                 if(searchPattern.charAt(m) == tes) {
@@ -387,10 +387,10 @@ public class StringMatchingExperiment {
                                     d1 = pattern.length();
                                 }
                             }
-                            if(count != 0) {
+                            if(count != 0) {//According to the number of matches, d2 is found by looking at goodSuffix
                                 d2 = goodSuffix[count - 1];
                             }
-
+                            //d1 and d2 are compared, whichever is greater, the number of shifts is determined accordingly
                              if(d1 - count > d2) {
                                 shiftCount = d1 - count;
                                 break;
@@ -411,6 +411,7 @@ public class StringMatchingExperiment {
                     indices.add(lineAndColumn);
                     shiftCount = pattern.length();
                 }
+                //the more it needs to be scrolled the more scrolling -1 is because at the end of the for loop j is being incremented by any 1 to prevent it
                 j += shiftCount - 1;
             }
 
@@ -419,23 +420,24 @@ public class StringMatchingExperiment {
         return indices;
     }
 
-
+    //this method prints the desired output to the text file
     public static void printOutput(ArrayList<String> text, ArrayList<Integer[]> indices) throws IOException {
 
         String fileName = textName + "_output";
         FileWriter writer = new FileWriter(fileName + ".html");
         Integer[] lineAndColumn = new Integer[2];
-        String patterWithMark = "<mark>" + pattern + "</mark>";
+        String patterWithMark = "<mark>" + pattern + "</mark>";//String to replace pattern in
         String newLine = "";
         String oldLine = "";
 
-        for(int i = 0; i < text.size() - 1; ++i) {
+        for(int i = 0; i < text.size() - 1; ++i) {//traverses each line of text
             oldLine = (String)text.get(i);
-            int count = 0;
+            int count = 0;//counts how many matching patterns are in the row
 
-            for(int j = 0; j < indices.size() - 1; ++j) {
+            for(int j = 0; j < indices.size() - 1; j++) {//travels indices
                 lineAndColumn = (Integer[])indices.get(j);
-                if (lineAndColumn[0] - 1 == i) {
+                if (lineAndColumn[0] - 1 == i) {//checks if there is a patter on that line
+                    //changes the line
                     newLine = oldLine.substring(0, lineAndColumn[1] - 1 + count * (patterWithMark.length() - pattern.length())) + patterWithMark + oldLine.substring(lineAndColumn[1] - 1 + pattern.length() + count * (patterWithMark.length() - pattern.length()));
                     oldLine = newLine;
                     ++count;
