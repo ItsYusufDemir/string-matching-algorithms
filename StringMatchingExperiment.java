@@ -35,7 +35,7 @@ public class StringMatchingExperiment {
         long beginMain = System.currentTimeMillis(); //This is for running time
 
         //Fetching the file into memory
-        textName = "1MBEnglish";
+        textName = "English_Sample_1";
         Path textPath = Path.of(textName + ".html");
         ArrayList<String> text = new ArrayList<>(); //Since we do not know the number of lines in the file, we use ArrayList
 
@@ -60,7 +60,7 @@ public class StringMatchingExperiment {
 
         
 
-        pattern = "Iron";
+        pattern = "genesis";
 
 
         ArrayList<Integer[]> indices; //The indices of all matches
@@ -71,9 +71,10 @@ public class StringMatchingExperiment {
         long beginBruteForce = System.currentTimeMillis();
 
         indices = bruteForceStringMathcing(text, pattern);
+        long endBruteForce = System.currentTimeMillis();
         printOutput(text, indices);
 
-        long endBruteForce = System.currentTimeMillis();
+
         System.out.printf("\nTime elapsed for Brute Force: %d ms\n", endBruteForce-beginBruteForce);
         System.out.printf("Number of comparison for Brute Force: %d\n\n", numberOfComparisons);
         numberOfComparisons = 0;
@@ -86,10 +87,12 @@ public class StringMatchingExperiment {
         //HORSPOOL'S ALGORITHM
         long beginHorspool = System.currentTimeMillis();
 
+
         indices = horspoolsAlgorithm(text, pattern);
+        long endHorspool = System.currentTimeMillis();
         printOutput(text, indices);
 
-        long endHorspool = System.currentTimeMillis();
+
         System.out.printf("Time elapsed for Horspool's Algorithm: %d ms\n", endHorspool-beginHorspool);
         System.out.printf("Number of comparison for Horspool's Algorithm: %d\n\n", numberOfComparisons);
         numberOfComparisons = 0;
@@ -102,9 +105,9 @@ public class StringMatchingExperiment {
         long beginBoyer = System.currentTimeMillis();
 
         indices = boyerMooreAlgorithm(text, pattern);
+        long endBoyer = System.currentTimeMillis();
         printOutput(text, indices);
 
-        long endBoyer = System.currentTimeMillis();
         System.out.printf("Time elapsed for Boyer-Moore Algorithm: %d ms\n", endBoyer-beginBoyer);
         System.out.printf("Number of comparison for Boyer-Moore Algorithm: %d\n\n", numberOfComparisons);
         numberOfComparisons = 0;
@@ -116,13 +119,7 @@ public class StringMatchingExperiment {
         long endMain = System.currentTimeMillis();
         System.out.printf("\nTime elapsed in total: %d ms\n", endMain-beginMain);
 
-
-
-
-
-
     }
-
 
 
 
@@ -134,33 +131,49 @@ public class StringMatchingExperiment {
         Integer[] lineAndColumn; //holds line and column number for each matching strings
         String str = ""; //initializing
         int length = pattern.length(); //length variable holds length of the pattern
-        char p[] = pattern.toCharArray(); //converting pattern from string to char array
 
         for (int i = 0; i < text.size() - 1; i++) {
             str = text.get(i); // str is equal to current line of the text
-            char token[] = str.toCharArray(); //converting current line to char array
 
-            for (int j = 0; j < token.length-length; j++) {
-                int a = length-1; //initializing "a"
+            for (int j = 0; j < str.length() - length; ) {
+                int a = length - 1; //initializing "a"
 
-                numberOfComparisons++;
-                while ((a >= 0) && (p[length - 1 - a] == token[j + length -1 - a])) { //in each match, we decrease the variable "a" to obtain whether we have complete match or not
-                       a--;
-                       numberOfComparisons++;
-                   }
+                if (str.charAt(j) == '<') { //if contains "<" sign
+                    j++;
+                    while (str.charAt(j) != '>') { //search for ">" sign
+                        j++; //increase j by 1
+                    }
 
-
-                if (a == -1) {  //if pattern matches completely
-                    lineAndColumn = new Integer[2]; //creating new array which holds line and column number of match
-                    lineAndColumn[0] = i + 1; //line number
-                    lineAndColumn[1] = j + 1 ; //column number
-                    indices.add(lineAndColumn); //add array to arraylist
                 }
+
+                if (str.charAt(j) != '<') {  //if it is not "<" sign
+                    while ((a >= 0) && (pattern.charAt(length - 1 - a) == str.charAt(j + length - 1 - a)) && (numberOfComparisons++ >= 0)) { //in each match, we decrease the variable "a" to obtain whether we have complete match or not
+                        a--;
+                    }
+
+                    if (a == -1) {  //if pattern matches completely
+                        lineAndColumn = new Integer[2]; //creating new array which holds line and column number of match
+                        lineAndColumn[0] = i + 1; //line number
+                        lineAndColumn[1] = j + 1; //column number
+                        indices.add(lineAndColumn); //add array to arraylist
+                        j++;
+
+                    }
+                    else{
+                        j++;
+                    }
+
+                }
+
             }
         }
+
+        /*
         for (int i = 0; i < indices.size(); i++) {
             System.out.println("Brute force:" + indices.get(i)[0] + " " + indices.get(i)[1]);
         }
+
+         */
 
         return indices;  //returning arraylist named indices
     }
@@ -195,6 +208,7 @@ public class StringMatchingExperiment {
             System.out.println((char)badSymbol[i][0] + " " + badSymbol[i][1]);
 
         }
+        System.out.println("Others: " + pattern.length());
         System.out.println("--------------------------------------");
 
     }
@@ -203,50 +217,70 @@ public class StringMatchingExperiment {
 
 
 
+
     //this method searchs for the pattern in the given text with hors-pool algorithm. Text is held in an arraylist line by line.
     public static ArrayList<Integer[]> horspoolsAlgorithm(ArrayList<String> text, String pattern){
 
+        String sub = ""; //initializing sub which holds to substring
         createBadSymbolTable(pattern); //calling the bad symbol table function
         ArrayList<Integer[]> indices = new ArrayList<>(); //creating arraylist to hold indices of the matching strings in the text
         Integer[] lineAndColumn ; //holds line and column number for each matching strings
-        String str = ""; //initializing
+        String str = ""; //initializing str which holds the current line
         int length = pattern.length(); //length variable holds length of the pattern
-        char p[] = pattern.toCharArray(); //converting pattern from string to char array
 
         for(int i = 0 ; i < text.size()-1; i++) {
             str = text.get(i); // str is equal to current line of the text
-            char token[] = str.toCharArray(); //converting current line to char array
+            sub = str.substring(0,length); //initializing substring
 
-            for (int j = length - 1; j < token.length;j++ ) {
-                int a = 0;
-                numberOfComparisons++;
-                while ((a < length) && (p[length - 1 - a] == token[j - a])) { //in each match, we increase the variable "a" to obtain whether we have complete match or not
-                    a++;
-                    numberOfComparisons++;
-                }
-                if (a == length) { //if pattern matches completely
-                    lineAndColumn = new Integer[2]; //creating new array which holds line and column number of match
-                    lineAndColumn[0]= i+1; //line number
-                    lineAndColumn[1]= j-length+2; //column number
-                    indices.add(lineAndColumn); //add array to arraylist
-                } else
-                    for(int m = 0 ; m<badSymbol.length ; m++) {
-                        if (token[j] == (char) badSymbol[m][0]) { //if the currents char is equal to any of the elements in bad symbol table
-                            j += badSymbol[m][1]; //number of shift will be the corresponding integer in the table
-                            j--; //decrease j by 1(we will increase j by 1 at the beginning of the loop)
-                            break; //break the loop
-                        }
-                        if(m == badSymbol.length-1){  //if there is no match with the bad symbol table
-                            j += length-1; //number of shift will be length(we will increase j by 1 at the beginning of the loop)
-                        }
+            for (int j = length - 1; j < str.length(); ) {
+                int a = 0;  //initializing "a"
+
+                if(sub.contains("<")) { //if substring contains "<" sign
+                    if (j-length > 0) {
+                        j -= length-1; //decrease j by length-1
                     }
+                    while (str.charAt(j) != '>') { //search for ">" sign
+                        j++; //increase j by 1
+                    }
+                    j += length; //at the end of the while loop, increase j by length
 
+                }
+
+                if(!sub.contains("<")) {  //if substring does not contain "<" sign
+                    while ((a < length) && (pattern.charAt(length - 1 - a) == str.charAt(j - a)) && numberOfComparisons++ >= 0) { //in each match, we increase the variable "a" to obtain whether we have complete match or not
+                        a++;
+                    }
+                    if (a == length) { //if pattern matches completely
+                        lineAndColumn = new Integer[2]; //creating new array which holds line and column number of match
+                        lineAndColumn[0] = i + 1; //line number
+                        lineAndColumn[1] = j - length + 2; //column number
+                        indices.add(lineAndColumn); //add array to arraylist
+                        j++;
+                    } else
+                        for (int m = 0; m < badSymbol.length; m++) {
+                            if (str.charAt(j) == (char) badSymbol[m][0]) { //if the currents char is equal to any of the elements in bad symbol table
+                                j += badSymbol[m][1]; //number of shift will be the corresponding integer in the table
+                                //decrease j by 1(we will increase j by 1 at the beginning of the loop)
+                                break; //break the loop
+                            }
+                            if (m == badSymbol.length - 1) {  //if there is no match with the bad symbol table
+                                j += length ; //number of shift will be length(we will increase j by 1 at the beginning of the loop)
+                            }
+                        }
+                }
+
+                if(j < str.length()) {
+                    sub = str.substring(j - length + 1, j + 1);  // set substring to search if there is "<" sign or not
+                }
             }
-
         }
+
+        /*
         for(int i = 0 ; i< indices.size() ; i++) {
             System.out.println("Horspool Algorithm " + indices.get(i)[0] + " " + indices.get(i)[1]);
         }
+
+         */
         return indices; //return arraylist indices
     }
 
