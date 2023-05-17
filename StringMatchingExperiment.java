@@ -60,7 +60,7 @@ public class StringMatchingExperiment {
 
         
 
-        pattern = "genesis";
+        pattern = "the most";
 
 
         ArrayList<Integer[]> indices; //The indices of all matches
@@ -230,47 +230,49 @@ public class StringMatchingExperiment {
 
         for(int i = 0 ; i < text.size()-1; i++) {
             str = text.get(i); // str is equal to current line of the text
-            sub = str.substring(0,length); //initializing substring
+            if (str.length() >= pattern.length()) {
+                sub = str.substring(0, length); //initializing substring
 
-            for (int j = length - 1; j < str.length(); ) {
-                int a = 0;  //initializing "a"
+                for (int j = length - 1; j < str.length(); ) {
+                    int a = 0;  //initializing "a"
 
-                if(sub.contains("<")) { //if substring contains "<" sign
-                    if (j-length > 0) {
-                        j -= length-1; //decrease j by length-1
-                    }
-                    while (str.charAt(j) != '>') { //search for ">" sign
-                        j++; //increase j by 1
-                    }
-                    j += length; //at the end of the while loop, increase j by length
-
-                }
-
-                if(!sub.contains("<")) {  //if substring does not contain "<" sign
-                    while ((a < length) && (pattern.charAt(length - 1 - a) == str.charAt(j - a)) && numberOfComparisons++ >= 0) { //in each match, we increase the variable "a" to obtain whether we have complete match or not
-                        a++;
-                    }
-                    if (a == length) { //if pattern matches completely
-                        lineAndColumn = new Integer[2]; //creating new array which holds line and column number of match
-                        lineAndColumn[0] = i + 1; //line number
-                        lineAndColumn[1] = j - length + 2; //column number
-                        indices.add(lineAndColumn); //add array to arraylist
-                        j++;
-                    } else
-                        for (int m = 0; m < badSymbol.length; m++) {
-                            if (str.charAt(j) == (char) badSymbol[m][0]) { //if the currents char is equal to any of the elements in bad symbol table
-                                j += badSymbol[m][1]; //number of shift will be the corresponding integer in the table
-                                //decrease j by 1(we will increase j by 1 at the beginning of the loop)
-                                break; //break the loop
-                            }
-                            if (m == badSymbol.length - 1) {  //if there is no match with the bad symbol table
-                                j += length ; //number of shift will be length(we will increase j by 1 at the beginning of the loop)
-                            }
+                    if (sub.contains("<")) { //if substring contains "<" sign
+                        if (j - length > 0) {
+                            j -= length - 1; //decrease j by length-1
                         }
-                }
+                        while (str.charAt(j) != '>') { //search for ">" sign
+                            j++; //increase j by 1
+                        }
+                        j += length; //at the end of the while loop, increase j by length
 
-                if(j < str.length()) {
-                    sub = str.substring(j - length + 1, j + 1);  // set substring to search if there is "<" sign or not
+                    }
+
+                    if (!sub.contains("<")) {  //if substring does not contain "<" sign
+                        while ((a < length) && (pattern.charAt(length - 1 - a) == str.charAt(j - a)) && numberOfComparisons++ >= 0) { //in each match, we increase the variable "a" to obtain whether we have complete match or not
+                            a++;
+                        }
+                        if (a == length) { //if pattern matches completely
+                            lineAndColumn = new Integer[2]; //creating new array which holds line and column number of match
+                            lineAndColumn[0] = i + 1; //line number
+                            lineAndColumn[1] = j - length + 2; //column number
+                            indices.add(lineAndColumn); //add array to arraylist
+                            j++;
+                        } else
+                            for (int m = 0; m < badSymbol.length; m++) {
+                                if (str.charAt(j) == (char) badSymbol[m][0]) { //if the currents char is equal to any of the elements in bad symbol table
+                                    j += badSymbol[m][1]; //number of shift will be the corresponding integer in the table
+                                    //decrease j by 1(we will increase j by 1 at the beginning of the loop)
+                                    break; //break the loop
+                                }
+                                if (m == badSymbol.length - 1) {  //if there is no match with the bad symbol table
+                                    j += length; //number of shift will be length(we will increase j by 1 at the beginning of the loop)
+                                }
+                            }
+                    }
+
+                    if (j < str.length()) {
+                        sub = str.substring(j - length + 1, j + 1);  // set substring to search if there is "<" sign or not
+                    }
                 }
             }
         }
@@ -279,10 +281,11 @@ public class StringMatchingExperiment {
         for(int i = 0 ; i< indices.size() ; i++) {
             System.out.println("Horspool Algorithm " + indices.get(i)[0] + " " + indices.get(i)[1]);
         }
+       */
 
-         */
         return indices; //return arraylist indices
     }
+
 
 
 
