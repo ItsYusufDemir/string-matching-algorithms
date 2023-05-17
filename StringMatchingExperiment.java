@@ -467,7 +467,7 @@ public class StringMatchingExperiment {
         for(int i = 0; i < text.size() - 1; ++i) {//traverses each line of text
             oldLine = (String)text.get(i);
             int count = 0;//counts how many matching patterns are in the row
-
+            newLine = oldLine;
             for(int j = 0; j < indices.size() - 1; j++) {//travels indices
                 lineAndColumn = (Integer[])indices.get(j);
                 if (lineAndColumn[0] - 1 == i) {//checks if there is a patter on that line
@@ -475,6 +475,7 @@ public class StringMatchingExperiment {
                     newLine = oldLine.substring(0, lineAndColumn[1] - 1 + count * (patterWithMark.length() - pattern.length())) + patterWithMark + oldLine.substring(lineAndColumn[1] - 1 + pattern.length() + count * (patterWithMark.length() - pattern.length()));
                     oldLine = newLine;
                     ++count;
+
                 }
             }
             writer.write(newLine + "\n");
