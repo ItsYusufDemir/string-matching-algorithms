@@ -422,11 +422,12 @@ public class StringMatchingExperiment {
                     int d1 = 0;
                     int d2 = 0;
                     int index = searchPattern.length();
-                    for(int m = searchPattern.length() - 1; m >= 0; m--) {//Count how many characters the pattern matches
+                    for(int m = searchPattern.length() - 1; m >= 0; m--) {
+                        numberOfComparisons++;//Count how many characters the pattern matches
                         if(searchPattern.charAt(m) == pattern.charAt(m)) {
+
                             count++;
                         } else {
-                            numberOfComparisons++;
                             for(int n = 0; n < badSymbol.length; n++) {//d1 is found by looking at badSymbol table
                                 char tes = (char)badSymbol[n][0];
                                 char a = searchPattern.charAt(m);
@@ -454,7 +455,6 @@ public class StringMatchingExperiment {
 
                 }
                 if(count == pattern.length()) {
-                    numberOfComparisons++;
                     lineAndColumn = new Integer[2]; //creating new array which holds line and column number of match
                     lineAndColumn[0] = i + 1; //line number
                     lineAndColumn[1] = j + 1 ; //column number
