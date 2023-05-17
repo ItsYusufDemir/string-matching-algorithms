@@ -446,7 +446,7 @@ public class StringMatchingExperiment {
                     lineAndColumn[0] = i + 1; //line number
                     lineAndColumn[1] = j + 1 ; //column number
                     indices.add(lineAndColumn);
-                    shiftCount = pattern.length();
+                    shiftCount = 1;
                 }
                 //the more it needs to be scrolled the more scrolling -1 is because at the end of the for loop j is being incremented by any 1 to prevent it
                 j += shiftCount - 1;
