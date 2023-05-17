@@ -484,7 +484,7 @@ public class StringMatchingExperiment {
             oldLine = (String)text.get(i);
             int count = 0;//counts how many matching patterns are in the row
             newLine = oldLine;
-            for(int j = 0; j < indices.size() - 1; j++) {//travels indices
+            for(int j = 0; j <= indices.size() - 1; j++) {//travels indices
                 lineAndColumn = (Integer[])indices.get(j);
                 if (lineAndColumn[0] - 1 == i) {//checks if there is a patter on that line
                     //changes the line
