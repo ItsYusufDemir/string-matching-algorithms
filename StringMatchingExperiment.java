@@ -35,7 +35,7 @@ public class StringMatchingExperiment {
         long beginMain = System.currentTimeMillis(); //This is for running time
 
         //Fetching the file into memory
-        textName = "English_Sample_1";
+        textName = "sample";
         Path textPath = Path.of(textName + ".html");
         ArrayList<String> text = new ArrayList<>(); //Since we do not know the number of lines in the file, we use ArrayList
 
@@ -60,7 +60,7 @@ public class StringMatchingExperiment {
 
         
 
-        pattern = "the most";
+        pattern = "AT_THAT";
 
 
         ArrayList<Integer[]> indices; //The indices of all matches
@@ -93,7 +93,7 @@ public class StringMatchingExperiment {
         printOutput(text, indices);
 
 
-        System.out.printf("Time elapsed for Horspool's Algorithm: %d ms\n", endHorspool-beginHorspool);
+        System.out.printf("\nTime elapsed for Horspool's Algorithm: %d ms\n", endHorspool-beginHorspool);
         System.out.printf("Number of comparison for Horspool's Algorithm: %d\n\n", numberOfComparisons);
         numberOfComparisons = 0;
 
@@ -108,7 +108,7 @@ public class StringMatchingExperiment {
         long endBoyer = System.currentTimeMillis();
         printOutput(text, indices);
 
-        System.out.printf("Time elapsed for Boyer-Moore Algorithm: %d ms\n", endBoyer-beginBoyer);
+        System.out.printf("\nTime elapsed for Boyer-Moore Algorithm: %d ms\n", endBoyer-beginBoyer);
         System.out.printf("Number of comparison for Boyer-Moore Algorithm: %d\n\n", numberOfComparisons);
         numberOfComparisons = 0;
 
@@ -147,9 +147,15 @@ public class StringMatchingExperiment {
                 }
 
                 if (str.charAt(j) != '<') {  //if it is not "<" sign
-                    while ((a >= 0) && (pattern.charAt(length - 1 - a) == str.charAt(j + length - 1 - a)) && (numberOfComparisons++ >= 0)) { //in each match, we decrease the variable "a" to obtain whether we have complete match or not
+                    numberOfComparisons++;
+                    boolean isEntered = false;
+                    while ((a >= 0) && (pattern.charAt(length - 1 - a) == str.charAt(j + length - 1 - a))) { //in each match, we decrease the variable "a" to obtain whether we have complete match or not
                         a--;
+                        numberOfComparisons++;
+                        isEntered = true;
                     }
+                    if(isEntered)
+                        numberOfComparisons++;
 
                     if (a == -1) {  //if pattern matches completely
                         lineAndColumn = new Integer[2]; //creating new array which holds line and column number of match
@@ -248,9 +254,16 @@ public class StringMatchingExperiment {
                     }
 
                     if (!sub.contains("<")) {  //if substring does not contain "<" sign
-                        while ((a < length) && (pattern.charAt(length - 1 - a) == str.charAt(j - a)) && numberOfComparisons++ >= 0) { //in each match, we increase the variable "a" to obtain whether we have complete match or not
+                        numberOfComparisons++;
+                        boolean isEntered = false;
+                        while ((a < length) && (pattern.charAt(length - 1 - a) == str.charAt(j - a))) { //in each match, we increase the variable "a" to obtain whether we have complete match or not
                             a++;
+                            numberOfComparisons++;
+                            isEntered = true;
                         }
+                        if(isEntered)
+                            numberOfComparisons++;
+
                         if (a == length) { //if pattern matches completely
                             lineAndColumn = new Integer[2]; //creating new array which holds line and column number of match
                             lineAndColumn[0] = i + 1; //line number
